@@ -22,11 +22,12 @@ def apploop():
         elif choice == "4":
             print("Finances")
         elif choice == "5":
+            print("Goodbye")
             break
         else:
             print("The chosen option is invalid")
             
-if __name__ == "__main__":
+if __name__ == "__main__": #Prevents the program from running automatically when imported by another module.
     apploop()
 
     
