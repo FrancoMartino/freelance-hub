@@ -1,5 +1,9 @@
 import time
 
+# Estado en memoria para la ejecucion actual del programa.
+active_sessions = {}
+project_hours = {}
+
 def startSession(projectId):
     """
     Captura el datetime actual para marcar inicio de trabajo en un proyecto.
@@ -52,3 +56,167 @@ def generateTimeReport(allData):
         reportMatrix.append(makeRow(p_id, hrs))
         
     return reportMatrix
+
+
+def trackingMenu():
+    """
+    Muestra las opciones del submodulo de seguimiento de tiempo.
+
+    - output: Str
+    """
+    print("\n== TIME TRACKING ==")
+    print("1. Start session")
+    print("2. End session")
+    print("3. Show report")
+    print("4. Back to main menu")
+    return input("Choose an option: ").strip()
+
+
+def printReportMatrix(reportMatrix):
+    """
+    Imprime una matriz en formato de tabla simple para consola.
+
+    - input: reportMatrix, List[List]
+    """
+    for row in reportMatrix:
+        print(str(row[0]) + " | " + str(row[1]))
+
+
+def getKnownProjects():
+    """
+    Retorna lista ordenada de proyectos conocidos por el modulo.
+    """
+    return sorted(set(project_hours.keys()) | set(active_sessions.keys())) 
+
+
+def showProjectsWithNumbers(projects):
+    """
+    Muestra proyectos numerados desde 1.
+    """
+    index = 1
+    for projectId in projects:
+        print(str(index) + ". " + str(projectId))
+        index = index + 1
+
+
+def chooseProjectByNumber(projects, allowCreateNew):
+    """
+    Permite elegir proyecto por numero.
+    Si allowCreateNew es True, la opcion 0 crea un proyecto nuevo.
+
+    - output: Str | None
+    """
+    while True:
+        if not projects and not allowCreateNew:
+            return None
+
+        if projects:
+            showProjectsWithNumbers(projects)
+        else:
+            print("(no projects yet)")
+
+        if allowCreateNew:
+            print("0. Create new project")
+
+        selected = input("Select project number: ").strip()
+        if not selected.isdigit():
+            print("Please enter a valid number")
+            continue
+
+        selectedNumber = int(selected)
+
+        if allowCreateNew and selectedNumber == 0:
+            newProjectId = input("New Project ID: ").strip()
+            if not newProjectId:
+                print("Project ID cannot be empty")
+                continue
+            return newProjectId
+
+        if 1 <= selectedNumber <= len(projects):
+            return projects[selectedNumber - 1]
+
+        print("The selected number is out of range")
+
+
+def pickOrCreateProject():
+    """
+    Permite elegir un proyecto existente por numero o crear uno nuevo con 0.
+
+    - output: Str
+    """
+    while True:
+        knownProjects = getKnownProjects()
+
+        print("\nAvailable projects:")
+        projectId = chooseProjectByNumber(knownProjects, True)
+        if projectId is not None:
+            return projectId
+
+
+def formatDuration(sessionNetHours):
+    """
+    Convierte horas a formato simple hh:mm:ss.
+
+    - input: sessionNetHours, Float
+    - output: Str
+    """
+    totalSeconds = int(sessionNetHours * 3600)
+    hours = totalSeconds // 3600
+    minutes = (totalSeconds % 3600) // 60
+    seconds = totalSeconds % 60
+    return str(hours) + "h " + str(minutes) + "m " + str(seconds) + "s"
+
+
+def trackingLoop():
+    """
+    Bucle interactivo del modulo de time tracking.
+    """
+    while True:
+        choice = trackingMenu()
+
+        if choice == "1":
+            projectId = pickOrCreateProject()
+
+            if projectId in active_sessions:
+                print("There is already an active session for that project")
+                continue
+
+            active_sessions[projectId] = startSession(projectId)
+            print(f"Session started for project {projectId}")
+
+        elif choice == "2":
+            activeProjectIds = sorted(active_sessions.keys())
+            if not activeProjectIds:
+                print("No active sessions to finish")
+                continue
+
+            print("\nActive sessions:")
+            projectId = chooseProjectByNumber(activeProjectIds, False)
+            if projectId is None:
+                print("No active sessions to finish")
+                continue
+
+            startTimestamp = active_sessions.pop(projectId)
+            sessionNetHours = endSession(projectId, startTimestamp)
+            totalHours = project_hours.get(projectId, 0.0)
+            project_hours[projectId] = accumulateHours(totalHours, sessionNetHours)
+
+            print(f"Session ended for project {projectId}")
+            print("Session duration: " + formatDuration(sessionNetHours))
+            print(f"Session hours: {sessionNetHours}")
+            print(f"Accumulated hours: {project_hours[projectId]}")
+
+        elif choice == "3":
+            if not project_hours:
+                print("No tracked time yet")
+                continue
+
+            report = generateTimeReport(project_hours)
+            printReportMatrix(report)
+
+        elif choice == "4":
+            print("Returning to main menu")
+            break
+
+        else:
+            print("The chosen option is invalid")

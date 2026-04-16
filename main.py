@@ -1,3 +1,6 @@
+from tracking import trackingLoop
+
+
 def mainMenu():
     """
     Muestra el menú principal de la aplicación y captura la elección del usuario.
@@ -35,7 +38,7 @@ def apploop():
         if choice == "1":
             print("projects")  #TODO: llamar al modulo de proyectos
         elif choice == "2":
-            print("TIme tracking") # TODO: llamar al módulo de tareas
+            trackingLoop()
         elif choice == "3":
             print("Finances") #TODO: llamar al modulo de seguimiento de tiempo
         elif choice == "4":
