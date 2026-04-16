@@ -10,9 +10,9 @@ def mainMenu():
 
     # Imprime las opciones disponibles del menú
     print("1. Projects")
-    print("2. Tasks")
-    print("3. Time Tracking")
-    print("4. Finances")
+    print("2. Time tracking")
+    print("3. Finances")
+    print("4. Tasks")
     print("5. Exit")
 
     # Captura y retorna la entrada del usuario
@@ -35,11 +35,11 @@ def apploop():
         if choice == "1":
             print("projects")  #TODO: llamar al modulo de proyectos
         elif choice == "2":
-            print("Tasks") # TODO: llamar al módulo de tareas
+            print("TIme tracking") # TODO: llamar al módulo de tareas
         elif choice == "3":
-            print("Time Tracking") #TODO: llamar al modulo de seguimiento de tiempo
+            print("Finances") #TODO: llamar al modulo de seguimiento de tiempo
         elif choice == "4":
-            print("Finances") # TODO: llamar al módulo de finanzas
+            print("Tasks") # TODO: llamar al módulo de finanzas
         elif choice == "5":
             print("Goodbye") # Sale del bucle y termina el programa
             break
