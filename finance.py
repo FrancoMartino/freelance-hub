@@ -1,19 +1,47 @@
-def calculate_budget(estimated_hours, hourly_rate):
-    try:
-        hours = float(estimated_hours)
-        rate = float(hourly_rate)
-    except (ValueError, TypeError):
-        print("Error: inputs must be numeric.")
+def calculateBudget(estimatedHours, hourlyRate):
+    """
+    Calcula el costo total de un proyecto.
+
+    Args:
+        estimatedHours: cantidad de horas estimadas para el proyecto.
+        hourlyRate: precio por hora.
+
+    Returns:
+        totalCost: costo total del proyecto.
+    """
+    hours = float(estimatedHours)
+    rate = float(hourlyRate)
+
+    totalCost = hours * rate
+    return totalCost
+
+
+def convertCurrency(amountArs, currency):
+    """
+    Convierte un monto de ARS a la moneda seleccionada.
+
+    Args:
+        amountArs: monto en pesos argentinos.
+        currency: monedas ('USD', 'EUR', 'BRL').
+
+    Returns:
+        converted: devuelve el monto convertido, o None si la moneda no es soportada.
+    """
+    exchangeRates = {
+        'USD': 1500,
+        'EUR': 1600,
+        'BRL': 300,
+    }
+
+    currency = currency.upper()
+
+    if currency not in exchangeRates:
+        print("Error. Unsoported currency. Supported currencies are: USD, EUR, BRL.")
         return None
 
-    total_cost = hours * rate
-    return total_cost
-    
+    converted = float(amountArs) / exchangeRates[currency]
+    return converted
 
-if __name__ == "__main__":
-    print(calculate_budget(10,25))
-    print(calculate_budget(0, 100))
-    print(calculate_budget("abc", 25))
-    print(calculate_budget(10, ""))
-    print(calculate_budget("5.5", "20"))
+
+
 
