@@ -1,4 +1,6 @@
 from tracking import trackingLoop
+from projects import projectsLoop
+from finance import financeLoop
 
 
 def mainMenu():
@@ -36,11 +38,11 @@ def apploop():
         choice = mainMenu()
         # Redirige al módulo correspondiente según la opción elegida
         if choice == "1":
-            print("projects")  #TODO: llamar al modulo de proyectos
+            projectsLoop()
         elif choice == "2":
             trackingLoop()
         elif choice == "3":
-            print("Finances") #TODO: llamar al modulo de seguimiento de tiempo
+            financeLoop()
         elif choice == "4":
             print("Tasks") # TODO: llamar al módulo de finanzas
         elif choice == "5":

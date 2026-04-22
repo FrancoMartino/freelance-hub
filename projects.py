@@ -1,23 +1,121 @@
-import os 
+projectsData = {}
 
-# Crea la estructura de carpetas básica para un nuevo proyecto.
-# Recibe el nombre del proyecto y genera las subcarpetas 'src', 'docs' y 'assets' dentro de él.
-# Devuelve True si todas las carpetas se crearon correctamente, o False si hubo algún error.
-def inicializar_carpetas(nombre_proyecto):  
-    carpetas = ['src', 'docs', 'assets']
+
+def createProject(projectId, projectName, hourlyRate):
+    """
+    Crea un proyecto en memoria con su precio por hora.
+
+    - input: projectId, Str
+    - input: projectName, Str
+    - input: hourlyRate, Float
+
+    - output: Tuple[Bool, Str]
+    """
+    projectId = projectId.strip()
+    projectName = projectName.strip()
+
+    if not projectId:
+        return False, "Project ID cannot be empty"
+
+    if not projectName:
+        return False, "Project name cannot be empty"
+
+    if projectId in projectsData:
+        return False, "A project with that ID already exists"
+
     try:
-        for carpeta in carpetas: 
-            ruta = os.path.join(nombre_proyecto, carpeta)  # Arma la ruta completa de cada subcarpeta
-            os.makedirs(ruta)  # Crea la carpeta en el sistema de archivos
-            print(ruta) 
-        return True 
-        
-    except:
-            return False
+        rate = float(hourlyRate)
+    except ValueError:
+        return False, "Hourly rate must be a number"
 
-resultado = inicializar_carpetas('C:/Users/ulica/OneDrive/Desktop')
+    if rate < 0:
+        return False, "Hourly rate cannot be negative"
 
-lista_tarea = []
+    projectsData[projectId] = {
+        "name": projectName,
+        "hourlyRate": rate,
+    }
+    return True, "Project created successfully"
 
 
-    
+def getProjectIds():
+    """
+    Retorna IDs de proyectos ordenados alfabeticamente.
+
+    - output: List[Str]
+    """
+    return sorted(projectsData.keys())
+
+
+def getProjectData(projectId):
+    """
+    Retorna los datos de un proyecto por su ID.
+
+    - input: projectId, Str
+
+    - output: Dict | None
+    """
+    return projectsData.get(projectId)
+
+
+def printProjectsTable(projectIds):
+    """
+    Imprime una tabla simple de proyectos.
+
+    - input: projectIds, List[Str]
+    """
+    print("Project ID | Name | Hourly Rate")
+    for projectId in projectIds:
+        data = getProjectData(projectId)
+        print(projectId + " | " + data["name"] + " | " + str(data["hourlyRate"]))
+
+
+def listProjects():
+    """
+    Muestra todos los proyectos registrados.
+    """
+    projectIds = getProjectIds()
+    if not projectIds:
+        print("No projects created yet")
+        return
+
+    printProjectsTable(projectIds)
+
+
+def projectsMenu():
+    """
+    Muestra las opciones del submodulo de proyectos.
+
+    - output: Str
+    """
+    print("\n== PROJECTS ==")
+    print("1. Create project")
+    print("2. Show projects")
+    print("3. Back to main menu")
+    return input("Choose an option: ").strip()
+
+
+def projectsLoop():
+    """
+    Bucle interactivo del modulo de proyectos.
+    """
+    while True:
+        choice = projectsMenu()
+
+        if choice == "1":
+            projectId = input("Project ID: ").strip()
+            projectName = input("Project name: ").strip()
+            hourlyRate = input("Hourly rate: ").strip()
+
+            created, message = createProject(projectId, projectName, hourlyRate)
+            print(message)
+
+        elif choice == "2":
+            listProjects()
+
+        elif choice == "3":
+            print("Returning to main menu")
+            break
+
+        else:
+            print("The chosen option is invalid")

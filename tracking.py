@@ -1,4 +1,5 @@
 import time
+from projects import getProjectIds
 
 # Estado en memoria para la ejecucion actual del programa.
 active_sessions = {}
@@ -86,7 +87,7 @@ def getKnownProjects():
     """
     Retorna lista ordenada de proyectos conocidos por el modulo.
     """
-    return sorted(set(project_hours.keys()) | set(active_sessions.keys())) 
+    return sorted(set(getProjectIds()) | set(project_hours.keys()) | set(active_sessions.keys()))
 
 
 def showProjectsWithNumbers(projects):
@@ -140,17 +141,18 @@ def chooseProjectByNumber(projects, allowCreateNew):
 
 def pickOrCreateProject():
     """
-    Permite elegir un proyecto existente por numero o crear uno nuevo con 0.
+    Permite elegir un proyecto existente por numero.
+    Si no hay proyectos, retorna None.
 
-    - output: Str
+    - output: Str | None
     """
-    while True:
-        knownProjects = getKnownProjects()
+    knownProjects = getKnownProjects()
 
-        print("\nAvailable projects:")
-        projectId = chooseProjectByNumber(knownProjects, True)
-        if projectId is not None:
-            return projectId
+    if not knownProjects:
+        return None
+
+    print("\nAvailable projects:")
+    return chooseProjectByNumber(knownProjects, False)
 
 
 def formatDuration(sessionNetHours):
@@ -176,6 +178,10 @@ def trackingLoop():
 
         if choice == "1":
             projectId = pickOrCreateProject()
+
+            if projectId is None:
+                print("No projects available. Create one in Projects module")
+                continue
 
             if projectId in active_sessions:
                 print("There is already an active session for that project")
