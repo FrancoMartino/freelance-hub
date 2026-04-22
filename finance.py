@@ -5,12 +5,10 @@ def calculateBudget(estimatedHours, hourlyRate):
     """
     Calcula el costo total de un proyecto.
 
-    Args:
-        estimatedHours: cantidad de horas estimadas para el proyecto.
-        hourlyRate: precio por hora.
+    - input: estimatedHours, Float
+    - input: hourlyRate, Float
 
-    Returns:
-        totalCost: costo total del proyecto.
+    - output: Float
     """
     hours = float(estimatedHours)
     rate = float(hourlyRate)
@@ -23,12 +21,10 @@ def convertCurrency(amountArs, currency):
     """
     Convierte un monto de ARS a la moneda seleccionada.
 
-    Args:
-        amountArs: monto en pesos argentinos.
-        currency: monedas ('USD', 'EUR', 'BRL').
+    - input: amountArs, Float
+    - input: currency, Str
 
-    Returns:
-        converted: devuelve el monto convertido, o None si la moneda no es soportada.
+    - output: Float | None
     """
     exchangeRates = {
         'USD': 1500,
@@ -39,7 +35,7 @@ def convertCurrency(amountArs, currency):
     currency = currency.upper()
 
     if currency not in exchangeRates:
-        print("Error. Unsoported currency. Supported currencies are: USD, EUR, BRL.")
+        print("Error. Unsupported currency. Supported currencies are: USD, EUR, BRL.")
         return None
 
     converted = float(amountArs) / exchangeRates[currency]
