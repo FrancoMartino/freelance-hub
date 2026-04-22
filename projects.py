@@ -1,4 +1,35 @@
+from tables import printTable
+
+
 projectsData = {}
+
+
+def isValidNumber(text):
+    """
+    Verifica si un texto representa un numero positivo o negativo simple.
+
+    - input: text, Str
+
+    - output: Bool
+    """
+    text = text.strip()
+
+    if text.startswith("-"):
+        text = text[1:]
+
+    if text == "":
+        return False
+
+    dots = 0
+    for char in text:
+        if char == ".":
+            dots = dots + 1
+            if dots > 1:
+                return False
+        elif not ("0" <= char <= "9"):
+            return False
+
+    return True
 
 
 def createProject(projectId, projectName, hourlyRate):
@@ -23,10 +54,10 @@ def createProject(projectId, projectName, hourlyRate):
     if projectId in projectsData:
         return False, "Ya existe un proyecto con ese ID"
 
-    try:
-        rate = float(hourlyRate)
-    except ValueError:
+    if not isValidNumber(hourlyRate):
         return False, "La tarifa por hora debe ser un numero"
+
+    rate = float(hourlyRate)
 
     if rate < 0:
         return False, "La tarifa por hora no puede ser negativa"
@@ -58,18 +89,6 @@ def getProjectData(projectId):
     return projectsData.get(projectId)
 
 
-def printProjectsTable(projectIds):
-    """
-    Imprime una tabla simple de proyectos.
-
-    - input: projectIds, List[Str]
-    """
-    print("ID Proyecto | Nombre | Tarifa por hora")
-    for projectId in projectIds:
-        data = getProjectData(projectId)
-        print(projectId + " | " + data["name"] + " | " + str(data["hourlyRate"]))
-
-
 def listProjects():
     """
     Muestra todos los proyectos registrados.
@@ -79,7 +98,12 @@ def listProjects():
         print("Todavia no hay proyectos creados")
         return
 
-    printProjectsTable(projectIds)
+    rows = []
+    for projectId in projectIds:
+        data = getProjectData(projectId)
+        rows.append([projectId, data["name"], data["hourlyRate"]])
+
+    printTable(["ID Proyecto", "Nombre", "Tarifa por hora"], rows)
 
 
 def projectsMenu():

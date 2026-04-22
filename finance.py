@@ -1,6 +1,69 @@
 from projects import getProjectData, getProjectIds
 
 
+def trimSpaces(text):
+    """
+    Quita espacios al inicio y al final de un texto.
+
+    - input: text, Str
+
+    - output: Str
+    """
+    while text.startswith(" "):
+        text = text[1:]
+
+    while text.endswith(" "):
+        text = text[:-1]
+
+    return text
+
+
+def isValidNumber(text):
+    """
+    Verifica si un texto representa un numero positivo o negativo simple.
+
+    - input: text, Str
+
+    - output: Bool
+    """
+    text = trimSpaces(text)
+
+    if text.startswith("-"):
+        text = text[1:]
+
+    if text == "":
+        return False
+
+    dots = 0
+    for char in text:
+        if char == ".":
+            dots = dots + 1
+            if dots > 1:
+                return False
+        elif not ("0" <= char <= "9"):
+            return False
+
+    return True
+
+
+def isPositiveInteger(text):
+    """
+    Verifica si un texto contiene solo digitos.
+
+    - input: text, Str
+
+    - output: Bool
+    """
+    if text == "":
+        return False
+
+    for char in text:
+        if not ("0" <= char <= "9"):
+            return False
+
+    return True
+
+
 def calculateBudget(estimatedHours, hourlyRate):
     """
     Calcula el costo total de un proyecto.
@@ -53,7 +116,7 @@ def financeMenu():
     print("2. Calcular presupuesto por proyecto")
     print("3. Convertir moneda desde ARS")
     print("4. Volver al menu principal")
-    return input("Elegi una opcion: ").strip()
+    return trimSpaces(input("Elegi una opcion: "))
 
 
 def showProjectOptions(projectIds):
@@ -80,9 +143,9 @@ def chooseProjectForBudget():
         return None
 
     showProjectOptions(projectIds)
-    selected = input("Selecciona el numero de proyecto: ").strip()
+    selected = trimSpaces(input("Selecciona el numero de proyecto: "))
 
-    if not selected.isdigit():
+    if not isPositiveInteger(selected):
         print("Por favor, ingresa un numero valido")
         return None
 
@@ -102,14 +165,15 @@ def financeLoop():
         choice = financeMenu()
 
         if choice == "1":
-            estimatedHours = input("Horas estimadas: ").strip()
-            hourlyRate = input("Tarifa por hora: ").strip()
+            estimatedHours = trimSpaces(input("Horas estimadas: "))
+            hourlyRate = trimSpaces(input("Tarifa por hora: "))
 
-            try:
-                totalCost = calculateBudget(estimatedHours, hourlyRate)
-                print("Presupuesto estimado: " + str(totalCost))
-            except ValueError:
+            if not isValidNumber(estimatedHours) or not isValidNumber(hourlyRate):
                 print("Las horas y la tarifa deben ser numeros validos")
+                continue
+
+            totalCost = calculateBudget(estimatedHours, hourlyRate)
+            print("Presupuesto estimado: " + str(totalCost))
 
         elif choice == "2":
             projectId = chooseProjectForBudget()
@@ -119,25 +183,26 @@ def financeLoop():
                 continue
 
             data = getProjectData(projectId)
-            estimatedHours = input("Horas estimadas para " + projectId + ": ").strip()
+            estimatedHours = trimSpaces(input("Horas estimadas para " + projectId + ": "))
 
-            try:
-                totalCost = calculateBudget(estimatedHours, data["hourlyRate"])
-                print("Proyecto: " + projectId)
-                print("Tarifa por hora: " + str(data["hourlyRate"]))
-                print("Presupuesto estimado: " + str(totalCost))
-            except ValueError:
+            if not isValidNumber(estimatedHours):
                 print("Las horas estimadas deben ser un numero valido")
+                continue
+
+            totalCost = calculateBudget(estimatedHours, data["hourlyRate"])
+            print("Proyecto: " + projectId)
+            print("Tarifa por hora: " + str(data["hourlyRate"]))
+            print("Presupuesto estimado: " + str(totalCost))
 
         elif choice == "3":
-            amountArs = input("Monto en ARS: ").strip()
-            currency = input("Moneda destino (USD/EUR/BRL): ").strip()
+            amountArs = trimSpaces(input("Monto en ARS: "))
+            currency = trimSpaces(input("Moneda destino (USD/EUR/BRL): "))
 
-            try:
-                converted = convertCurrency(amountArs, currency)
-            except ValueError:
+            if not isValidNumber(amountArs):
                 print("El monto debe ser un numero valido")
                 continue
+
+            converted = convertCurrency(amountArs, currency)
 
             if converted is not None:
                 print("Monto convertido: " + str(converted) + " " + currency.upper())

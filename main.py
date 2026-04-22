@@ -43,10 +43,4 @@ def appLoop():
         else:
             print("La opcion elegida no es valida")
 
-
-if __name__ == "__main__":
-    appLoop()
-
-    
-
-
+appLoop()

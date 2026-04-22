@@ -1,6 +1,26 @@
 tasksData = {}
 nextTaskId = 1
 
+from tables import printTable
+
+
+def isPositiveInteger(text):
+    """
+    Verifica si un texto contiene solo digitos.
+
+    - input: text, Str
+
+    - output: Bool
+    """
+    if text == "":
+        return False
+
+    for char in text:
+        if not ("0" <= char <= "9"):
+            return False
+
+    return True
+
 
 def createTask(taskDescription):
     """
@@ -33,52 +53,6 @@ def getTaskIds():
     return sorted(tasksData.keys())
 
 
-def repeatChar(charValue, count):
-    """
-    Repite un caracter una cantidad dada de veces.
-
-    - input: charValue, Str
-    - input: count, Int
-
-    - output: Str
-    """
-    result = ""
-    for _ in range(count):
-        result = result + charValue
-    return result
-
-
-def padRight(textValue, totalWidth):
-    """
-    Completa un texto con espacios a la derecha hasta un ancho fijo.
-
-    - input: textValue, Str
-    - input: totalWidth, Int
-
-    - output: Str
-    """
-    textValue = str(textValue)
-    while len(textValue) < totalWidth:
-        textValue = textValue + " "
-    return textValue
-
-
-def printTasksHeader(idWidth, statusWidth, descriptionWidth):
-    """
-    Imprime encabezado y separadores de la tabla de tareas.
-
-    - input: idWidth, Int
-    - input: statusWidth, Int
-    - input: descriptionWidth, Int
-    """
-    separator = "+" + repeatChar("-", idWidth + 2) + "+" + repeatChar("-", statusWidth + 2) + "+" + repeatChar("-", descriptionWidth + 2) + "+"
-    titleRow = "| " + padRight("ID", idWidth) + " | " + padRight("Estado", statusWidth) + " | " + padRight("Descripcion", descriptionWidth) + " |"
-
-    print(separator)
-    print(titleRow)
-    print(separator)
-
-
 def listTasks():
     """
     Muestra todas las tareas registradas.
@@ -88,33 +62,13 @@ def listTasks():
         print("No hay tareas cargadas")
         return
 
-    idWidth = len("ID")
-    statusWidth = len("Estado")
-    descriptionWidth = len("Descripcion")
-
+    rows = []
     for taskId in taskIds:
         taskData = tasksData[taskId]
         status = "Hecha" if taskData["done"] else "Pendiente"
+        rows.append([taskId, status, taskData["description"]])
 
-        if len(str(taskId)) > idWidth:
-            idWidth = len(str(taskId))
-
-        if len(status) > statusWidth:
-            statusWidth = len(status)
-
-        if len(taskData["description"]) > descriptionWidth:
-            descriptionWidth = len(taskData["description"])
-
-    printTasksHeader(idWidth, statusWidth, descriptionWidth)
-
-    for taskId in taskIds:
-        taskData = tasksData[taskId]
-        status = "Hecha" if taskData["done"] else "Pendiente"
-        row = "| " + padRight(taskId, idWidth) + " | " + padRight(status, statusWidth) + " | " + padRight(taskData["description"], descriptionWidth) + " |"
-        print(row)
-
-    separator = "+" + repeatChar("-", idWidth + 2) + "+" + repeatChar("-", statusWidth + 2) + "+" + repeatChar("-", descriptionWidth + 2) + "+"
-    print(separator)
+    printTable(["ID", "Estado", "Descripcion"], rows)
 
 
 def chooseTaskId():
@@ -127,7 +81,7 @@ def chooseTaskId():
         return None
 
     selected = input("Ingresa el ID de la tarea: ").strip()
-    if not selected.isdigit():
+    if not isPositiveInteger(selected):
         print("Por favor, ingresa un numero valido")
         return None
 

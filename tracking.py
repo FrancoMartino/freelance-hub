@@ -1,9 +1,28 @@
 import time
 from projects import getProjectIds
+from tables import printTable
 
 # Estado en memoria para la ejecucion actual del programa.
 active_sessions = {}
 project_hours = {}
+
+
+def isPositiveInteger(text):
+    """
+    Verifica si un texto contiene solo digitos.
+
+    - input: text, Str
+
+    - output: Bool
+    """
+    if text == "":
+        return False
+
+    for char in text:
+        if not ("0" <= char <= "9"):
+            return False
+
+    return True
 
 def startSession(projectId):
     """
@@ -47,12 +66,12 @@ def generateTimeReport(allData):
 
     - output: List[List]
     """
-    makeRow = lambda p_id, hrs: [p_id, hrs]
-    
-    reportMatrix = [["ID Proyecto", "Horas totales"]]
+    makeRow = lambda p_id, hrs: [p_id, formatDuration(hrs)]
+
+    reportMatrix = [["ID Proyecto", "Duracion total"]]
     for p_id, hrs in allData.items():
         reportMatrix.append(makeRow(p_id, hrs))
-        
+
     return reportMatrix
 
 
@@ -76,8 +95,12 @@ def printReportMatrix(reportMatrix):
 
     - input: reportMatrix, List[List]
     """
-    for row in reportMatrix:
-        print(str(row[0]) + " | " + str(row[1]))
+    if not reportMatrix:
+        return
+
+    headers = reportMatrix[0]
+    rows = reportMatrix[1:]
+    printTable(headers, rows)
 
 
 def getKnownProjects():
@@ -110,7 +133,7 @@ def chooseProjectByNumber(projects):
         showProjectsWithNumbers(projects)
 
         selected = input("Selecciona el numero de proyecto: ").strip()
-        if not selected.isdigit():
+        if not isPositiveInteger(selected):
             print("Por favor, ingresa un numero valido")
             continue
 
@@ -149,7 +172,7 @@ def formatDuration(sessionNetHours):
     hours = totalSeconds // 3600
     minutes = (totalSeconds % 3600) // 60
     seconds = totalSeconds % 60
-    return str(hours) + "h " + str(minutes) + "m " + str(seconds) + "s"
+    return str(hours).zfill(2) + ":" + str(minutes).zfill(2) + ":" + str(seconds).zfill(2)
 
 
 def trackingLoop():
@@ -192,8 +215,8 @@ def trackingLoop():
 
             print(f"Sesion finalizada para el proyecto {projectId}")
             print("Duracion de la sesion: " + formatDuration(sessionNetHours))
-            print(f"Horas de la sesion: {sessionNetHours}")
-            print(f"Horas acumuladas: {project_hours[projectId]}")
+            print("Horas de la sesion: " + formatDuration(sessionNetHours))
+            print("Horas acumuladas: " + formatDuration(project_hours[projectId]))
 
         elif choice == "3":
             if not project_hours:
