@@ -9,24 +9,21 @@ def startSession(projectId):
     """
     Captura el datetime actual para marcar inicio de trabajo en un proyecto.
 
-    - input: projectId, Int
+    - input: projectId, Str
 
     - output: Float
     """
-    return time.time() # TODO: Logica de diccionarios
+    return time.time()
 
 def endSession(projectId, startTimestamp):
     """
     Captura datetime de fin, calcular diferencia con el inicio y retornar horas trabajadas.
 
-    - input: projectId, Float
+    - input: projectId, Str
     - input: startTimestamp, Float
 
     - output: Float
     """
-
-    # TODO: Falta toda la logica de guardado y diccionario
-
     calcHours = lambda start, end: round((end - start) / 3600, 4)
     return calcHours(startTimestamp, time.time())
 
@@ -100,24 +97,17 @@ def showProjectsWithNumbers(projects):
         index = index + 1
 
 
-def chooseProjectByNumber(projects, allowCreateNew):
+def chooseProjectByNumber(projects):
     """
     Permite elegir proyecto por numero.
-    Si allowCreateNew es True, la opcion 0 crea un proyecto nuevo.
 
     - output: Str | None
     """
     while True:
-        if not projects and not allowCreateNew:
+        if not projects:
             return None
 
-        if projects:
-            showProjectsWithNumbers(projects)
-        else:
-            print("(no projects yet)")
-
-        if allowCreateNew:
-            print("0. Create new project")
+        showProjectsWithNumbers(projects)
 
         selected = input("Select project number: ").strip()
         if not selected.isdigit():
@@ -125,13 +115,6 @@ def chooseProjectByNumber(projects, allowCreateNew):
             continue
 
         selectedNumber = int(selected)
-
-        if allowCreateNew and selectedNumber == 0:
-            newProjectId = input("New Project ID: ").strip()
-            if not newProjectId:
-                print("Project ID cannot be empty")
-                continue
-            return newProjectId
 
         if 1 <= selectedNumber <= len(projects):
             return projects[selectedNumber - 1]
@@ -152,7 +135,7 @@ def pickOrCreateProject():
         return None
 
     print("\nAvailable projects:")
-    return chooseProjectByNumber(knownProjects, False)
+    return chooseProjectByNumber(knownProjects)
 
 
 def formatDuration(sessionNetHours):
@@ -197,7 +180,7 @@ def trackingLoop():
                 continue
 
             print("\nActive sessions:")
-            projectId = chooseProjectByNumber(activeProjectIds, False)
+            projectId = chooseProjectByNumber(activeProjectIds)
             if projectId is None:
                 print("No active sessions to finish")
                 continue
