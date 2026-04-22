@@ -1,3 +1,5 @@
+import re
+
 from projects import getProjectData, getProjectIds
 
 
@@ -9,13 +11,9 @@ def trimSpaces(text):
 
     - output: Str
     """
-    while text.startswith(" "):
-        text = text[1:]
-
-    while text.endswith(" "):
-        text = text[:-1]
-
-    return text
+    
+    # Sustituimos los espacios al inicio (^) o (|) al final ($) por nada
+    return re.sub(r'^ +| +$', '', text)
 
 
 def isValidNumber(text):
