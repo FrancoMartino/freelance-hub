@@ -49,7 +49,7 @@ def generateTimeReport(allData):
     """
     makeRow = lambda p_id, hrs: [p_id, hrs]
     
-    reportMatrix = [["Project ID", "Total Hours"]]
+    reportMatrix = [["ID Proyecto", "Horas totales"]]
     for p_id, hrs in allData.items():
         reportMatrix.append(makeRow(p_id, hrs))
         
@@ -62,12 +62,12 @@ def trackingMenu():
 
     - output: Str
     """
-    print("\n== TIME TRACKING ==")
-    print("1. Start session")
-    print("2. End session")
-    print("3. Show report")
-    print("4. Back to main menu")
-    return input("Choose an option: ").strip()
+    print("\n== SEGUIMIENTO DE TIEMPO ==")
+    print("1. Iniciar sesion")
+    print("2. Finalizar sesion")
+    print("3. Mostrar reporte")
+    print("4. Volver al menu principal")
+    return input("Elegi una opcion: ").strip()
 
 
 def printReportMatrix(reportMatrix):
@@ -109,9 +109,9 @@ def chooseProjectByNumber(projects):
 
         showProjectsWithNumbers(projects)
 
-        selected = input("Select project number: ").strip()
+        selected = input("Selecciona el numero de proyecto: ").strip()
         if not selected.isdigit():
-            print("Please enter a valid number")
+            print("Por favor, ingresa un numero valido")
             continue
 
         selectedNumber = int(selected)
@@ -119,7 +119,7 @@ def chooseProjectByNumber(projects):
         if 1 <= selectedNumber <= len(projects):
             return projects[selectedNumber - 1]
 
-        print("The selected number is out of range")
+        print("El numero elegido esta fuera de rango")
 
 
 def pickOrCreateProject():
@@ -134,7 +134,7 @@ def pickOrCreateProject():
     if not knownProjects:
         return None
 
-    print("\nAvailable projects:")
+    print("\nProyectos disponibles:")
     return chooseProjectByNumber(knownProjects)
 
 
@@ -163,26 +163,26 @@ def trackingLoop():
             projectId = pickOrCreateProject()
 
             if projectId is None:
-                print("No projects available. Create one in Projects module")
+                print("No hay proyectos disponibles. Crea uno en el modulo Proyectos")
                 continue
 
             if projectId in active_sessions:
-                print("There is already an active session for that project")
+                print("Ya hay una sesion activa para ese proyecto")
                 continue
 
             active_sessions[projectId] = startSession(projectId)
-            print(f"Session started for project {projectId}")
+            print(f"Sesion iniciada para el proyecto {projectId}")
 
         elif choice == "2":
             activeProjectIds = sorted(active_sessions.keys())
             if not activeProjectIds:
-                print("No active sessions to finish")
+                print("No hay sesiones activas para finalizar")
                 continue
 
-            print("\nActive sessions:")
+            print("\nSesiones activas:")
             projectId = chooseProjectByNumber(activeProjectIds)
             if projectId is None:
-                print("No active sessions to finish")
+                print("No hay sesiones activas para finalizar")
                 continue
 
             startTimestamp = active_sessions.pop(projectId)
@@ -190,22 +190,22 @@ def trackingLoop():
             totalHours = project_hours.get(projectId, 0.0)
             project_hours[projectId] = accumulateHours(totalHours, sessionNetHours)
 
-            print(f"Session ended for project {projectId}")
-            print("Session duration: " + formatDuration(sessionNetHours))
-            print(f"Session hours: {sessionNetHours}")
-            print(f"Accumulated hours: {project_hours[projectId]}")
+            print(f"Sesion finalizada para el proyecto {projectId}")
+            print("Duracion de la sesion: " + formatDuration(sessionNetHours))
+            print(f"Horas de la sesion: {sessionNetHours}")
+            print(f"Horas acumuladas: {project_hours[projectId]}")
 
         elif choice == "3":
             if not project_hours:
-                print("No tracked time yet")
+                print("Todavia no hay tiempo registrado")
                 continue
 
             report = generateTimeReport(project_hours)
             printReportMatrix(report)
 
         elif choice == "4":
-            print("Returning to main menu")
+            print("Volviendo al menu principal")
             break
 
         else:
-            print("The chosen option is invalid")
+            print("La opcion elegida no es valida")

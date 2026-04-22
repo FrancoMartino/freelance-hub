@@ -35,7 +35,7 @@ def convertCurrency(amountArs, currency):
     currency = currency.upper()
 
     if currency not in exchangeRates:
-        print("Error. Unsupported currency. Supported currencies are: USD, EUR, BRL.")
+        print("Error. Moneda no soportada. Monedas disponibles: USD, EUR, BRL.")
         return None
 
     converted = float(amountArs) / exchangeRates[currency]
@@ -48,12 +48,12 @@ def financeMenu():
 
     - output: Str
     """
-    print("\n== FINANCES ==")
-    print("1. Calculate custom budget")
-    print("2. Calculate budget by project")
-    print("3. Convert ARS currency")
-    print("4. Back to main menu")
-    return input("Choose an option: ").strip()
+    print("\n== FINANZAS ==")
+    print("1. Calcular presupuesto personalizado")
+    print("2. Calcular presupuesto por proyecto")
+    print("3. Convertir moneda desde ARS")
+    print("4. Volver al menu principal")
+    return input("Elegi una opcion: ").strip()
 
 
 def showProjectOptions(projectIds):
@@ -65,7 +65,7 @@ def showProjectOptions(projectIds):
     index = 1
     for projectId in projectIds:
         data = getProjectData(projectId)
-        print(str(index) + ". " + projectId + " (rate: " + str(data["hourlyRate"]) + ")")
+        print(str(index) + ". " + projectId + " (tarifa: " + str(data["hourlyRate"]) + ")")
         index = index + 1
 
 
@@ -80,15 +80,15 @@ def chooseProjectForBudget():
         return None
 
     showProjectOptions(projectIds)
-    selected = input("Select project number: ").strip()
+    selected = input("Selecciona el numero de proyecto: ").strip()
 
     if not selected.isdigit():
-        print("Please enter a valid number")
+        print("Por favor, ingresa un numero valido")
         return None
 
     selectedNumber = int(selected)
     if selectedNumber < 1 or selectedNumber > len(projectIds):
-        print("The selected number is out of range")
+        print("El numero elegido esta fuera de rango")
         return None
 
     return projectIds[selectedNumber - 1]
@@ -102,52 +102,52 @@ def financeLoop():
         choice = financeMenu()
 
         if choice == "1":
-            estimatedHours = input("Estimated hours: ").strip()
-            hourlyRate = input("Hourly rate: ").strip()
+            estimatedHours = input("Horas estimadas: ").strip()
+            hourlyRate = input("Tarifa por hora: ").strip()
 
             try:
                 totalCost = calculateBudget(estimatedHours, hourlyRate)
-                print("Estimated budget: " + str(totalCost))
+                print("Presupuesto estimado: " + str(totalCost))
             except ValueError:
-                print("Hours and rate must be valid numbers")
+                print("Las horas y la tarifa deben ser numeros validos")
 
         elif choice == "2":
             projectId = chooseProjectForBudget()
             if projectId is None:
                 if not getProjectIds():
-                    print("No projects available. Create one in Projects module")
+                    print("No hay proyectos disponibles. Crea uno en el modulo Proyectos")
                 continue
 
             data = getProjectData(projectId)
-            estimatedHours = input("Estimated hours for " + projectId + ": ").strip()
+            estimatedHours = input("Horas estimadas para " + projectId + ": ").strip()
 
             try:
                 totalCost = calculateBudget(estimatedHours, data["hourlyRate"])
-                print("Project: " + projectId)
-                print("Hourly rate: " + str(data["hourlyRate"]))
-                print("Estimated budget: " + str(totalCost))
+                print("Proyecto: " + projectId)
+                print("Tarifa por hora: " + str(data["hourlyRate"]))
+                print("Presupuesto estimado: " + str(totalCost))
             except ValueError:
-                print("Estimated hours must be a valid number")
+                print("Las horas estimadas deben ser un numero valido")
 
         elif choice == "3":
-            amountArs = input("Amount in ARS: ").strip()
-            currency = input("Target currency (USD/EUR/BRL): ").strip()
+            amountArs = input("Monto en ARS: ").strip()
+            currency = input("Moneda destino (USD/EUR/BRL): ").strip()
 
             try:
                 converted = convertCurrency(amountArs, currency)
             except ValueError:
-                print("Amount must be a valid number")
+                print("El monto debe ser un numero valido")
                 continue
 
             if converted is not None:
-                print("Converted amount: " + str(converted) + " " + currency.upper())
+                print("Monto convertido: " + str(converted) + " " + currency.upper())
 
         elif choice == "4":
-            print("Returning to main menu")
+            print("Volviendo al menu principal")
             break
 
         else:
-            print("The chosen option is invalid")
+            print("La opcion elegida no es valida")
 
 
 

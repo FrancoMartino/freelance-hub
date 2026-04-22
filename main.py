@@ -1,6 +1,7 @@
 from tracking import trackingLoop
 from projects import projectsLoop
 from finance import financeLoop
+from tasks import tasksLoop
 
 
 def mainMenu():
@@ -10,13 +11,13 @@ def mainMenu():
     - output: Str
     """
     print("== FREELANCE HUB ==")
-    print("1. Projects")
-    print("2. Time tracking")
-    print("3. Finances")
-    print("4. Tasks")
-    print("5. Exit")
+    print("1. Proyectos")
+    print("2. Seguimiento de tiempo")
+    print("3. Finanzas")
+    print("4. Tareas")
+    print("5. Salir")
 
-    choice = input("Choose an option: ")
+    choice = input("Elegi una opcion: ")
     return choice
 
 
@@ -35,12 +36,12 @@ def appLoop():
         elif choice == "3":
             financeLoop()
         elif choice == "4":
-            print("Tasks module coming soon")
+            tasksLoop()
         elif choice == "5":
-            print("Goodbye")
+            print("Hasta luego")
             break
         else:
-            print("The chosen option is invalid")
+            print("La opcion elegida no es valida")
 
 
 if __name__ == "__main__":

@@ -15,27 +15,27 @@ def createProject(projectId, projectName, hourlyRate):
     projectName = projectName.strip()
 
     if not projectId:
-        return False, "Project ID cannot be empty"
+        return False, "El ID del proyecto no puede estar vacio"
 
     if not projectName:
-        return False, "Project name cannot be empty"
+        return False, "El nombre del proyecto no puede estar vacio"
 
     if projectId in projectsData:
-        return False, "A project with that ID already exists"
+        return False, "Ya existe un proyecto con ese ID"
 
     try:
         rate = float(hourlyRate)
     except ValueError:
-        return False, "Hourly rate must be a number"
+        return False, "La tarifa por hora debe ser un numero"
 
     if rate < 0:
-        return False, "Hourly rate cannot be negative"
+        return False, "La tarifa por hora no puede ser negativa"
 
     projectsData[projectId] = {
         "name": projectName,
         "hourlyRate": rate,
     }
-    return True, "Project created successfully"
+    return True, "Proyecto creado correctamente"
 
 
 def getProjectIds():
@@ -64,7 +64,7 @@ def printProjectsTable(projectIds):
 
     - input: projectIds, List[Str]
     """
-    print("Project ID | Name | Hourly Rate")
+    print("ID Proyecto | Nombre | Tarifa por hora")
     for projectId in projectIds:
         data = getProjectData(projectId)
         print(projectId + " | " + data["name"] + " | " + str(data["hourlyRate"]))
@@ -76,7 +76,7 @@ def listProjects():
     """
     projectIds = getProjectIds()
     if not projectIds:
-        print("No projects created yet")
+        print("Todavia no hay proyectos creados")
         return
 
     printProjectsTable(projectIds)
@@ -88,11 +88,11 @@ def projectsMenu():
 
     - output: Str
     """
-    print("\n== PROJECTS ==")
-    print("1. Create project")
-    print("2. Show projects")
-    print("3. Back to main menu")
-    return input("Choose an option: ").strip()
+    print("\n== PROYECTOS ==")
+    print("1. Crear proyecto")
+    print("2. Mostrar proyectos")
+    print("3. Volver al menu principal")
+    return input("Elegi una opcion: ").strip()
 
 
 def projectsLoop():
@@ -103,9 +103,9 @@ def projectsLoop():
         choice = projectsMenu()
 
         if choice == "1":
-            projectId = input("Project ID: ").strip()
-            projectName = input("Project name: ").strip()
-            hourlyRate = input("Hourly rate: ").strip()
+            projectId = input("ID del proyecto: ").strip()
+            projectName = input("Nombre del proyecto: ").strip()
+            hourlyRate = input("Tarifa por hora: ").strip()
 
             created, message = createProject(projectId, projectName, hourlyRate)
             print(message)
@@ -114,8 +114,8 @@ def projectsLoop():
             listProjects()
 
         elif choice == "3":
-            print("Returning to main menu")
+            print("Volviendo al menu principal")
             break
 
         else:
-            print("The chosen option is invalid")
+            print("La opcion elegida no es valida")
