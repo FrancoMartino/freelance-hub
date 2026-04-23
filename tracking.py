@@ -1,3 +1,4 @@
+import os
 import time
 from projects import getProjectIds
 from tables import printTable
@@ -81,7 +82,8 @@ def trackingMenu():
 
     - output: Str
     """
-    print("\n== SEGUIMIENTO DE TIEMPO ==")
+    os.system("cls")
+    print("== SEGUIMIENTO DE TIEMPO ==")
     print("1. Iniciar sesion")
     print("2. Finalizar sesion")
     print("3. Mostrar reporte")
@@ -101,6 +103,11 @@ def printReportMatrix(reportMatrix):
     headers = reportMatrix[0]
     rows = reportMatrix[1:]
     printTable(headers, rows)
+    input("Presiona Enter para continuar")
+
+
+def pauseToContinue():
+    input("Presiona Enter para continuar")
 
 
 def getKnownProjects():
@@ -187,25 +194,30 @@ def trackingLoop():
 
             if projectId is None:
                 print("No hay proyectos disponibles. Crea uno en el modulo Proyectos")
+                pauseToContinue()
                 continue
 
             if projectId in active_sessions:
                 print("Ya hay una sesion activa para ese proyecto")
+                pauseToContinue()
                 continue
 
             active_sessions[projectId] = startSession(projectId)
             print(f"Sesion iniciada para el proyecto {projectId}")
+            pauseToContinue()
 
         elif choice == "2":
             activeProjectIds = sorted(active_sessions.keys())
             if not activeProjectIds:
                 print("No hay sesiones activas para finalizar")
+                pauseToContinue()
                 continue
 
             print("\nSesiones activas:")
             projectId = chooseProjectByNumber(activeProjectIds)
             if projectId is None:
                 print("No hay sesiones activas para finalizar")
+                pauseToContinue()
                 continue
 
             startTimestamp = active_sessions.pop(projectId)
@@ -217,10 +229,12 @@ def trackingLoop():
             print("Duracion de la sesion: " + formatDuration(sessionNetHours))
             print("Horas de la sesion: " + formatDuration(sessionNetHours))
             print("Horas acumuladas: " + formatDuration(project_hours[projectId]))
+            pauseToContinue()
 
         elif choice == "3":
             if not project_hours:
                 print("Todavia no hay tiempo registrado")
+                pauseToContinue()
                 continue
 
             report = generateTimeReport(project_hours)

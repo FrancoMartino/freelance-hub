@@ -1,3 +1,5 @@
+import os
+
 tasksData = {}
 nextTaskId = 1
 
@@ -69,6 +71,7 @@ def listTasks():
         rows.append([taskId, status, taskData["description"]])
 
     printTable(["ID", "Estado", "Descripcion"], rows)
+    input("Presiona Enter para continuar")
 
 
 def chooseTaskId():
@@ -126,7 +129,8 @@ def tasksMenu():
 
     - output: Str
     """
-    print("\n== TAREAS ==")
+    os.system("cls")
+    print("== TAREAS ==")
     print("1. Crear tarea")
     print("2. Mostrar tareas")
     print("3. Marcar tarea como hecha")
