@@ -173,6 +173,7 @@ def projectsLoop():
 
             created, message = createProject(projectId, projectName, hourlyRate)
             print(message)
+            input("Presiona Enter para continuar")
 
         elif choice == "2":
             listProjects()

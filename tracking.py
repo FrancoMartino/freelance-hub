@@ -114,7 +114,15 @@ def getKnownProjects():
     """
     Retorna lista ordenada de proyectos conocidos por el modulo.
     """
-    return sorted(set(getProjectIds()) | set(project_hours.keys()) | set(active_sessions.keys()))
+    allIds = getProjectIds() + list(project_hours.keys()) + list(active_sessions.keys())
+    
+    uniqueIds = []
+    for projectId in allIds:
+        if projectId not in uniqueIds:
+            uniqueIds.append(projectId)
+            
+    uniqueIds.sort()
+    return uniqueIds
 
 
 def showProjectsWithNumbers(projects):
