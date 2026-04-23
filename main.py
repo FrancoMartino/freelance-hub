@@ -1,3 +1,5 @@
+import os
+
 from tracking import trackingLoop
 from projects import projectsLoop
 from finance import financeLoop
@@ -10,6 +12,7 @@ def mainMenu():
 
     - output: Str
     """
+    os.system("cls")
     print("== FREELANCE HUB ==")
     print("1. Proyectos")
     print("2. Seguimiento de tiempo")

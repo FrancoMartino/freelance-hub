@@ -1,3 +1,5 @@
+import os
+
 from tables import printTable
 
 
@@ -112,7 +114,8 @@ def projectsMenu():
 
     - output: Str
     """
-    print("\n== PROYECTOS ==")
+    os.system("cls")
+    print("== PROYECTOS ==")
     print("1. Crear proyecto")
     print("2. Mostrar proyectos")
     print("3. Volver al menu principal")

@@ -1,3 +1,5 @@
+import os
+
 import re
 
 from projects import getProjectData, getProjectIds
@@ -109,7 +111,8 @@ def financeMenu():
 
     - output: Str
     """
-    print("\n== FINANZAS ==")
+    os.system("cls")
+    print("== FINANZAS ==")
     print("1. Calcular presupuesto personalizado")
     print("2. Calcular presupuesto por proyecto")
     print("3. Convertir moneda desde ARS")

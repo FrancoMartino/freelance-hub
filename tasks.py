@@ -1,3 +1,5 @@
+import os
+
 tasksData = {}
 nextTaskId = 1
 
@@ -126,7 +128,8 @@ def tasksMenu():
 
     - output: Str
     """
-    print("\n== TAREAS ==")
+    os.system("cls")
+    print("== TAREAS ==")
     print("1. Crear tarea")
     print("2. Mostrar tareas")
     print("3. Marcar tarea como hecha")

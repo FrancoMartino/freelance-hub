@@ -1,3 +1,4 @@
+import os
 import time
 from projects import getProjectIds
 from tables import printTable
@@ -81,7 +82,8 @@ def trackingMenu():
 
     - output: Str
     """
-    print("\n== SEGUIMIENTO DE TIEMPO ==")
+    os.system("cls")
+    print("== SEGUIMIENTO DE TIEMPO ==")
     print("1. Iniciar sesion")
     print("2. Finalizar sesion")
     print("3. Mostrar reporte")
