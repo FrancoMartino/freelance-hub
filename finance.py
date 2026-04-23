@@ -214,7 +214,3 @@ def financeLoop():
 
         else:
             print("La opcion elegida no es valida")
-
-
-
-

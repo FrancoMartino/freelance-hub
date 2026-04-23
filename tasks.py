@@ -71,6 +71,7 @@ def listTasks():
         rows.append([taskId, status, taskData["description"]])
 
     printTable(["ID", "Estado", "Descripcion"], rows)
+    input("Presiona Enter para continuar")
 
 
 def chooseTaskId():

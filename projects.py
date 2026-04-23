@@ -34,6 +34,25 @@ def isValidNumber(text):
     return True
 
 
+def isValidFolderName(text):
+    """
+    Verifica que un texto pueda usarse como nombre de carpeta en Windows.
+
+    - input: text, Str
+
+    - output: Bool
+    """
+    if text == "" or text == "." or text == "..":
+        return False
+
+    invalidChars = '<>:"/\\|?*'
+    for char in text:
+        if char in invalidChars:
+            return False
+
+    return True
+
+
 def createProject(projectId, projectName, hourlyRate):
     """
     Crea un proyecto en memoria con su precio por hora.
@@ -56,6 +75,9 @@ def createProject(projectId, projectName, hourlyRate):
     if projectId in projectsData:
         return False, "Ya existe un proyecto con ese ID"
 
+    if not isValidFolderName(projectId):
+        return False, "El ID del proyecto no puede contener caracteres invalidos para carpeta"
+
     if not isValidNumber(hourlyRate):
         return False, "La tarifa por hora debe ser un numero"
 
@@ -64,11 +86,25 @@ def createProject(projectId, projectName, hourlyRate):
     if rate < 0:
         return False, "La tarifa por hora no puede ser negativa"
 
+    projectsFolder = "proyectos"
+    if not os.path.exists(projectsFolder):
+        os.mkdir(projectsFolder)
+
+    projectFolder = os.path.join(projectsFolder, projectId)
+    if os.path.exists(projectFolder):
+        return False, "Ya existe una carpeta para ese ID de proyecto"
+
+    os.mkdir(projectFolder)
+    os.mkdir(os.path.join(projectFolder, "docs"))
+    os.mkdir(os.path.join(projectFolder, "assets"))
+    os.mkdir(os.path.join(projectFolder, "src"))
+
     projectsData[projectId] = {
         "name": projectName,
         "hourlyRate": rate,
+        "folder": projectFolder,
     }
-    return True, "Proyecto creado correctamente"
+    return True, "Proyecto creado correctamente y carpeta generada"
 
 
 def getProjectIds():
@@ -106,6 +142,7 @@ def listProjects():
         rows.append([projectId, data["name"], data["hourlyRate"]])
 
     printTable(["ID Proyecto", "Nombre", "Tarifa por hora"], rows)
+    input("Presiona Enter para continuar")
 
 
 def projectsMenu():
